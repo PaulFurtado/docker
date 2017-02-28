@@ -12,6 +12,7 @@ import (
 	"github.com/docker/libnetwork/discoverapi"
 	"github.com/docker/libnetwork/ipamapi"
 	"github.com/docker/libnetwork/ipamutils"
+	"github.com/docker/libnetwork/netlabel"
 	"github.com/docker/libnetwork/types"
 )
 
@@ -452,9 +453,12 @@ func (a *Allocator) RequestAddress(poolID string, prefAddress net.IP, opts map[s
 	}
 	ip, err := a.getAddress(p.Pool, bm, prefAddress, p.Range)
 	if err != nil {
-		return nil, nil, err
+	    if opts[ipamapi.RequestAddressType] == netlabel.Gateway {
+	        return &net.IPNet{IP: prefAddress, Mask: p.Pool.Mask}, nil, nil
+	    } else {
+		    return nil, nil, err
+		}
 	}
-
 	return &net.IPNet{IP: ip, Mask: p.Pool.Mask}, nil, nil
 }
 
