@@ -460,11 +460,7 @@ func (a *Allocator) RequestAddress(poolID string, prefAddress net.IP, opts map[s
 	}
 	ip, err := a.getAddress(p.Pool, bm, prefAddress, p.Range)
 	if err != nil {
-	    if opts[ipamapi.RequestAddressType] == netlabel.Gateway {
-	        return &net.IPNet{IP: prefAddress, Mask: p.Pool.Mask}, nil, nil
-	    } else {
-		    return nil, nil, err
-		}
+	    return nil, nil, err
 	}
 	return &net.IPNet{IP: ip, Mask: p.Pool.Mask}, nil, nil
 }
