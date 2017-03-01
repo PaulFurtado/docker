@@ -434,9 +434,12 @@ func (a *Allocator) RequestAddress(poolID string, prefAddress net.IP, opts map[s
 		return nil, nil, types.NotFoundErrorf("cannot find address pool for poolID:%s", poolID)
 	}
 
+    log.Debugf("pfurtado: pre-hack")
 	if opts[ipamapi.RequestAddressType] == netlabel.Gateway {
+	    log.Debugf("pfurtado: in hack")
         return &net.IPNet{IP: prefAddress, Mask: p.Pool.Mask}, nil, nil
     }
+    log.Debugf("pfurtado: hack not executed")
 
 	if prefAddress != nil && !p.Pool.Contains(prefAddress) {
 		aSpace.Unlock()
