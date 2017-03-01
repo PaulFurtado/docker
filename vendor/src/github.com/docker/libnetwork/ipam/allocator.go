@@ -434,6 +434,10 @@ func (a *Allocator) RequestAddress(poolID string, prefAddress net.IP, opts map[s
 		return nil, nil, types.NotFoundErrorf("cannot find address pool for poolID:%s", poolID)
 	}
 
+	if opts[ipamapi.RequestAddressType] == netlabel.Gateway {
+        return &net.IPNet{IP: prefAddress, Mask: p.Pool.Mask}, nil, nil
+    }
+
 	if prefAddress != nil && !p.Pool.Contains(prefAddress) {
 		aSpace.Unlock()
 		return nil, nil, ipamapi.ErrIPOutOfRange
